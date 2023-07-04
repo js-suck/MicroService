@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["tracing"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Hero {
+  id        Int    @id @default(autoincrement())
+  name      String  @unique
+  power     Int
+  hp        Int
+}
+
+model BankAccount {
+  id Int @id @default(autoincrement())
+  name String @unique
+  userId Int
+  balance Int
+}
+
+model User {
+  id       Int   @id @default(autoincrement())
+  email    String? @unique
+  firstname String
+  lastname String
+}
+

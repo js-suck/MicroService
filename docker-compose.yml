@@ -25,6 +25,11 @@ services:
       file: ./compose/compose.published.yml
       service: auth-api
 
+  user-api:
+    extends:
+      file: ./compose/compose.published.yml
+      service: user-api
+
 networks:
   default:
     external: true

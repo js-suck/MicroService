@@ -30,7 +30,7 @@ export interface GetResponse {
 }
 
 export interface GetAllResponse {
-  bankAccounts?: BankAccounts;
+  bankAccounts?: BankAccount[];
 }
 
 export interface AddRequest {

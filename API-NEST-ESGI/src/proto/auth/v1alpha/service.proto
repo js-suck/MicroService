@@ -1,8 +1,26 @@
 syntax = "proto3";
 
 package auth.v1alpha;
+import "google/protobuf/timestamp.proto";
 
-import "user/v1alpha/message.proto";
+option go_package = "stubs";
+
+enum UserRoleAuth {
+  USER_ROLE_BASIC = 0;
+  USER_ROLE_ADMIN = 1;
+}
+
+message UserAuth {
+  string id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string email = 4;
+
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+
+  UserRoleAuth role = 7;
+}
 
 message LoginRequest {
   string email = 1;
@@ -20,7 +38,7 @@ message LoginResponse {
     INTERNAL = 3;
   }
   STATUS status = 3;
-  user.v1alpha.User user = 4;
+  UserAuth user = 4;
 }
 
 message RefreshTokenRequest {
@@ -43,6 +61,12 @@ message ValidateResponse {
   bool ok = 1;
   string userId = 2;
   string userEmail = 3;
-  user.v1alpha.UserRole userRole = 4;
+  UserRoleAuth userRole = 4;
   bool internal = 5;
+}
+
+service AuthService {
+  rpc Login(LoginRequest) returns (LoginResponse) {}
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {}
+  rpc Validate(ValidateRequest) returns (ValidateResponse) {}
 }

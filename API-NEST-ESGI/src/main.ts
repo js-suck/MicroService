@@ -15,7 +15,7 @@ async function bootstrap() {
         package: 'bank.v1',
         protoPath: join(
           __dirname,
-          '../../../proto/bankAccount/v1alpha/bankAccount.proto',
+          './../proto/bankAccount/v1alpha/bankAccount.proto',
         ),
       },
     },
@@ -28,7 +28,7 @@ async function bootstrap() {
       options: {
         url: '0.0.0.0:3001',
         package: 'user.v1',
-        protoPath: join(__dirname, '../../../proto/user/v1alpha/user.proto'),
+        protoPath: join(__dirname, './../proto/user/v1alpha/user.proto'),
       },
     },
   );

@@ -38,12 +38,12 @@ export class AppService {
       });
   }
 
-  add(data: Prisma.BankAccountCreateInput) {
+  async add(data: Prisma.BankAccountCreateInput) {
     const { name, userId, balance } = data;
 
     let userExist = false;
     let hasAlreadyAccount = false;
-    this.userService.findOne(userId).then((user) => {
+    await this.userService.findOne(userId).then((user) => {
       if (user !== null) {
         userExist = true;
       }

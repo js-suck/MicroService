@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+
+package bank.v1;
+// this is the file where we define type and stubs will be generated.
+service BankAccountCRUDService{ 
+    rpc Add (AddRequest) returns (AddResponse) {}
+    rpc Get (GetRequest) returns (GetResponse) {}
+    rpc Delete (DeleteRequest) returns (DeleteResponse) {}
+    rpc Update (UpdateRequest) returns (UpdateResponse) {}
+    rpc GetAll (GetAllRequest) returns (GetAllResponse) {}
+}
+
+message BankAccount {
+    string name = 1;
+    int32 id = 2;
+    int32 userId = 3;
+    int32 balance = 4;
+}
+
+message BankAccounts {
+    repeated BankAccount bankAccounts = 1;
+}
+
+message SortFilter {
+  string field = 1;
+  SortOrder order = 2;
+}
+
+enum SortOrder {
+  asc = 0;
+  desc = 1;
+}
+  
+message Message {
+    string test = 1;
+}
+
+message GetRequest {
+    string name = 1;
+    int32 id = 2;
+  }
+  
+message GetResponse {
+  BankAccount bankAccount = 1;
+}
+
+message GetAllRequest {
+  SortFilter sortFilter = 1;
+}
+
+message GetAllResponse {
+  BankAccounts bankAccounts = 1;
+}
+
+message AddRequest {
+  string name = 1;
+  int32 userId = 3;
+  int32 balance = 4;
+}
+
+message AddResponse {
+  BankAccount bankAccount = 1;
+}
+
+
+message DeleteRequest {
+        string name = 1;
+        int32 id = 2;
+}
+    
+message DeleteResponse {
+  BankAccount bankAccount = 1;
+}
+
+message UpdateRequest {
+    string name = 1;
+    int32 id = 2;
+    int32 userId = 3;
+    int32 balance = 4;
+}
+
+message UpdateResponse {
+    BankAccount bankAccount = 1;
+}

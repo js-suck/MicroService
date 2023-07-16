@@ -49,10 +49,9 @@ export interface DeleteResponse {
 }
 
 export interface UpdateRequest {
-  name?: string;
-  id?: number;
-  power?: number;
-  hp?: number;
+  firstname?: string;
+  lastname?: string;
+  email?: string;
 }
 
 export interface UpdateResponse {

@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package user.v1;
+
+service UserCRUDService {
+  rpc Add(AddRequest) returns (AddResponse) {}
+  rpc FindOne(GetRequest) returns (GetResponse) {}
+  rpc Update(UpdateRequest) returns (UpdateResponse) {}
+  rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+  rpc FindAll(EmptyRequest) returns (FindAllResponse) {}
+  rpc FindByName(NameRequest) returns (FindByNameResponse) {}
+}
+
+
+message NameRequest {
+    string firstname =1;
+    string lastname =2;
+}
+
+message AddRequest {
+  User data = 1;
+}
+
+message AddResponse {
+  User user = 1;
+}
+
+message GetRequest {
+  int32 id = 1;
+}
+
+message GetResponse {
+  User user = 1;
+}
+
+message UpdateRequest {
+  int32 id = 1;
+  User data = 2;
+}
+
+message UpdateResponse {
+  User user = 1;
+}
+
+message DeleteRequest {
+  int32 id = 1;
+}
+
+message DeleteResponse {
+  User user = 1;
+}
+
+message EmptyRequest {}
+
+message FindAllResponse {
+  repeated User users = 1;
+}
+
+message NameFilter {
+  string name = 1;
+  enum Mode {
+    CONTAINS = 0;
+    STARTS_WITH = 1;
+    ENDS_WITH = 2;
+  }
+  Mode mode = 2;
+}
+
+message FindByNameRequest {
+  NameFilter filter = 1;
+}
+
+message FindByNameResponse {
+  repeated User users = 1;
+}
+
+message User {
+  string firstname = 1;
+  string lastname = 2;
+  string email = 3;
+  int32 id = 4;
+  int32 role = 5;
+}

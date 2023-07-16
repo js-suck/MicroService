@@ -1,4 +1,4 @@
-import { Controller } from "@nestjs/common";
+import { Controller, UseGuards } from "@nestjs/common";
 import { AppService } from "./bank.service";
 import { GrpcMethod } from "@nestjs/microservices";
 import { Metadata } from "@grpc/grpc-js";
@@ -15,33 +15,38 @@ import {
   BankAccount,
   UpdateRequest,
   UpdateResponse,
-  GetAllResponse,
+  GetAllResponse
 } from "./stubs/bankAccount/v1alpha/bankAccount";
 import { Prisma } from "@prisma/client";
 import { GetAllRequest } from "bank-api/src/stubs/bankAccount/v1alpha/bankAccount";
+//import { GrpcAuthGuard } from "src/auth/auth.guard";
 
 @Controller()
 @BankAccountCRUDServiceControllerMethods()
 export class AppController implements BankAccountCRUDServiceController {
   constructor(private readonly appService: AppService) {}
 
+  // here we use a middleware from Auth-API to check if user can see all bank accounts
+  //@UseGuards(GrpcAuthGuard)
   async add(request: AddRequest, metadata: Metadata): Promise<AddResponse> {
     return {
       bankAccount: await this.appService.add({
         name: request?.name,
         userId: request?.userId,
-        balance: request?.balance,
-      }),
+        balance: request?.balance
+      })
     };
   }
 
+  //@UseGuards(GrpcAuthGuard)
   @GrpcMethod("BankAccountCRUDService", "Get")
   async get(request: GetRequest, metadata: Metadata): Promise<GetResponse> {
     return {
-      bankAccount: await this.appService.findOne(request?.id),
+      bankAccount: await this.appService.findOne(request?.id)
     };
   }
 
+  //@UseGuards(GrpcAuthGuard)
   async delete(
     request: DeleteRequest,
     metadata?: Metadata
@@ -53,6 +58,7 @@ export class AppController implements BankAccountCRUDServiceController {
     }
   }
 
+  //@UseGuards(GrpcAuthGuard)
   async update(
     request: UpdateRequest,
     metadata?: Metadata
@@ -62,25 +68,27 @@ export class AppController implements BankAccountCRUDServiceController {
       bankAccount = await this.appService.update(request.id, {
         name: request.name,
         userId: request.userId,
-        balance: request.balance,
+        balance: request.balance
       });
       return { bankAccount };
     }
   }
 
-  @GrpcMethod("BankAccountCRUDService", "FindAll")
-  async findAll(
+  // here we use a middleware from Auth-API to check if user can see all bank accounts
+  // @UseGuards(GrpcAuthGuard)
+  @GrpcMethod("BankAccountCRUDService", "GetAll")
+  async getAll(
     request: GetAllRequest,
     metadata: Metadata
   ): Promise<GetAllResponse> {
     if (request?.sortFilter) {
       const filter = {
         field: request?.sortFilter.field,
-        order: request?.sortFilter?.order as unknown as Prisma.SortOrder,
+        order: request?.sortFilter?.order as unknown as Prisma.SortOrder
       };
 
       return {
-        bankAccounts: await this.appService.findAll(filter),
+        bankAccounts: await this.appService.findAll(filter)
       };
     }
 

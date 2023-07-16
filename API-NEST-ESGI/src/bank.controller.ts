@@ -1,7 +1,7 @@
-import { Controller } from '@nestjs/common';
-import { AppService } from './app.service';
-import { GrpcMethod } from '@nestjs/microservices';
-import { Metadata } from '@grpc/grpc-js';
+import { Controller } from "@nestjs/common";
+import { AppService } from "./bank.service";
+import { GrpcMethod } from "@nestjs/microservices";
+import { Metadata } from "@grpc/grpc-js";
 
 import {
   AddRequest,
@@ -15,7 +15,10 @@ import {
   BankAccount,
   UpdateRequest,
   UpdateResponse,
-} from './stubs/bankAccount/v1alpha/bankAccount';
+  GetAllResponse,
+} from "./stubs/bankAccount/v1alpha/bankAccount";
+import { Prisma } from "@prisma/client";
+import { GetAllRequest } from "bank-api/src/stubs/bankAccount/v1alpha/bankAccount";
 
 @Controller()
 @BankAccountCRUDServiceControllerMethods()
@@ -32,7 +35,7 @@ export class AppController implements BankAccountCRUDServiceController {
     };
   }
 
-  @GrpcMethod('BankAccountCRUDService', 'Get')
+  @GrpcMethod("BankAccountCRUDService", "Get")
   async get(request: GetRequest, metadata: Metadata): Promise<GetResponse> {
     return {
       bankAccount: await this.appService.findOne(request?.id),
@@ -41,7 +44,7 @@ export class AppController implements BankAccountCRUDServiceController {
 
   async delete(
     request: DeleteRequest,
-    metadata?: Metadata,
+    metadata?: Metadata
   ): Promise<DeleteResponse> {
     let bankAccount: BankAccount;
     if (request.id) {
@@ -52,7 +55,7 @@ export class AppController implements BankAccountCRUDServiceController {
 
   async update(
     request: UpdateRequest,
-    metadata?: Metadata,
+    metadata?: Metadata
   ): Promise<UpdateResponse> {
     let bankAccount: BankAccount;
     if (request.id) {
@@ -63,5 +66,25 @@ export class AppController implements BankAccountCRUDServiceController {
       });
       return { bankAccount };
     }
+  }
+
+  @GrpcMethod("BankAccountCRUDService", "FindAll")
+  async findAll(
+    request: GetAllRequest,
+    metadata: Metadata
+  ): Promise<GetAllResponse> {
+    if (request?.sortFilter) {
+      const filter = {
+        field: request?.sortFilter.field,
+        order: request?.sortFilter?.order as unknown as Prisma.SortOrder,
+      };
+
+      return {
+        bankAccounts: await this.appService.findAll(filter),
+      };
+    }
+
+    const bankAccounts = await this.appService.findAll();
+    return { bankAccounts: bankAccounts };
   }
 }

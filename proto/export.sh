@@ -1,5 +1,5 @@
 # !bin/sh
 
 buf generate
-buf export . --output ../bank-api/src/proto
+buf export . --output ../API-NEST-ESGI/bank-api/src/proto
 

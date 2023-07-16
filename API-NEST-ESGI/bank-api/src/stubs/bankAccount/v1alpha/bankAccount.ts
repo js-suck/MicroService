@@ -5,62 +5,77 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "bank.v1";
 
+export enum SortOrder {
+  asc = 0,
+  desc = 1,
+  UNRECOGNIZED = -1,
+}
+
 export interface BankAccount {
-  name?: string;
-  id?: number;
-  userId?: number;
-  balance?: number;
+  name?: string | undefined;
+  id?: number | undefined;
+  userId?: number | undefined;
+  balance?: number | undefined;
 }
 
 export interface BankAccounts {
-  bankAccounts?: BankAccount[];
+  bankAccounts?: BankAccount[] | undefined;
+}
+
+export interface SortFilter {
+  field?: string | undefined;
+  order?: SortOrder | undefined;
 }
 
 export interface Message {
-  test?: string;
+  test?: string | undefined;
 }
 
 export interface GetRequest {
-  name?: string;
-  id?: number;
+  name?: string | undefined;
+  id?: number | undefined;
 }
 
 export interface GetResponse {
-  bankAccount?: BankAccount;
+  bankAccount?: BankAccount | undefined;
+}
+
+export interface GetAllRequest {
+  sortFilter?: SortFilter | undefined;
 }
 
 export interface GetAllResponse {
-  bankAccounts?: BankAccount[];
+  bankAccounts?: BankAccounts | undefined;
 }
 
 export interface AddRequest {
-  name?: string;
-  userId?: number;
-  balance?: number;
+  name?: string | undefined;
+  userId?: number | undefined;
+  balance?: number | undefined;
 }
 
 export interface AddResponse {
-  bankAccount?: BankAccount;
+  bankAccount?: BankAccount | undefined;
 }
 
 export interface DeleteRequest {
-  name?: string;
-  id?: number;
+  name?: string | undefined;
+  id?: number | undefined;
 }
 
 export interface DeleteResponse {
-  bankAccount?: BankAccount;
+  bankAccount?: BankAccount | undefined;
 }
 
 export interface UpdateRequest {
-  name?: string;
-  id?: number;
-  userId?: number;
-  balance?: number;
+  name?: string | undefined;
+  id?: number | undefined;
+  userId?: number | undefined;
+  balance?: number | undefined;
 }
 
 export interface UpdateResponse {
-  bankAccount?: BankAccount;
+  bankAccount?: BankAccount | undefined;
 }
 
 export const BANK_V1_PACKAGE_NAME = "bank.v1";
@@ -75,6 +90,8 @@ export interface BankAccountCRUDServiceClient {
   delete(request: DeleteRequest, metadata?: Metadata): Observable<DeleteResponse>;
 
   update(request: UpdateRequest, metadata?: Metadata): Observable<UpdateResponse>;
+
+  getAll(request: GetAllRequest, metadata?: Metadata): Observable<GetAllResponse>;
 }
 
 /** this is the file where we define type and stubs will be generated. */
@@ -93,11 +110,16 @@ export interface BankAccountCRUDServiceController {
     request: UpdateRequest,
     metadata?: Metadata,
   ): Promise<UpdateResponse> | Observable<UpdateResponse> | UpdateResponse;
+
+  getAll(
+    request: GetAllRequest,
+    metadata?: Metadata,
+  ): Promise<GetAllResponse> | Observable<GetAllResponse> | GetAllResponse;
 }
 
 export function BankAccountCRUDServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["add", "get", "delete", "update"];
+    const grpcMethods: string[] = ["add", "get", "delete", "update", "getAll"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("BankAccountCRUDService", method)(constructor.prototype[method], method, descriptor);

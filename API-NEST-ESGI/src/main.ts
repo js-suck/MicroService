@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { join } from 'path';
 
-import { AppModule } from './app.module';
+import { AppModule } from './bank.module';
 import { UserModule } from './user/user.module';
 
 async function bootstrap() {
